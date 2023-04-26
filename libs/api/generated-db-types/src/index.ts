@@ -535,10 +535,10 @@ export class LocationOrderByWithRelationInput {
   content?: keyof typeof SortOrder;
   @Field(() => SortOrder, { nullable: true })
   published?: keyof typeof SortOrder;
-  @Field(() => SortOrder, { nullable: true })
-  authorId?: keyof typeof SortOrder;
   @Field(() => UserOrderByWithRelationInput, { nullable: true })
   author?: InstanceType<typeof UserOrderByWithRelationInput>;
+  @Field(() => SortOrder, { nullable: true })
+  authorId?: keyof typeof SortOrder;
 }
 
 @InputType()
@@ -866,10 +866,10 @@ export class LocationWhereInput {
   content?: InstanceType<typeof StringFilter>;
   @Field(() => BoolFilter, { nullable: true })
   published?: InstanceType<typeof BoolFilter>;
-  @Field(() => StringFilter, { nullable: true })
-  authorId?: InstanceType<typeof StringFilter>;
   @Field(() => UserRelationFilter, { nullable: true })
   author?: InstanceType<typeof UserRelationFilter>;
+  @Field(() => StringFilter, { nullable: true })
+  authorId?: InstanceType<typeof StringFilter>;
 }
 
 @ObjectType()
@@ -882,10 +882,10 @@ export class Location {
   content!: string | null;
   @Field(() => Boolean, { nullable: true, defaultValue: false })
   published!: boolean | null;
-  @Field(() => String, { nullable: true })
-  authorId!: string | null;
   @Field(() => User, { nullable: true })
   author?: InstanceType<typeof User> | null;
+  @Field(() => String, { nullable: true })
+  authorId!: string | null;
 }
 
 @ArgsType()
@@ -1003,7 +1003,6 @@ export class FloatWithAggregatesFilter {
   @Field(() => FloatFilter, { nullable: true })
   _max?: InstanceType<typeof FloatFilter>;
 }
-
 @InputType()
 export class IntFilter {
   @Field(() => Int, { nullable: true })
@@ -1346,12 +1345,12 @@ export class UserCreateManyInput {
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(3)
+  @Validator.MaxLength(3)
   name?: string;
   @Field(() => String, { nullable: false })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(8)
+  @Validator.MaxLength(8)
   password!: string;
 }
 
@@ -1390,12 +1389,12 @@ export class UserCreateWithoutLocationsInput {
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(3)
+  @Validator.MaxLength(3)
   name?: string;
   @Field(() => String, { nullable: false })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(8)
+  @Validator.MaxLength(8)
   password!: string;
 }
 
@@ -1409,12 +1408,12 @@ export class UserCreateInput {
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(3)
+  @Validator.MaxLength(3)
   name?: string;
   @Field(() => String, { nullable: false })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(8)
+  @Validator.MaxLength(8)
   password!: string;
   @Field(() => LocationCreateNestedManyWithoutAuthorInput, { nullable: true })
   locations?: InstanceType<typeof LocationCreateNestedManyWithoutAuthorInput>;
@@ -1454,7 +1453,7 @@ export class UserGroupBy {
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(3)
+  @Validator.MaxLength(3)
   name?: string;
   @HideField()
   password!: string;
@@ -1488,7 +1487,7 @@ export class UserMaxAggregate {
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(3)
+  @Validator.MaxLength(3)
   name?: string;
   @HideField()
   password?: string;
@@ -1528,7 +1527,7 @@ export class UserMinAggregate {
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(3)
+  @Validator.MaxLength(3)
   name?: string;
   @HideField()
   password?: string;
@@ -1614,12 +1613,12 @@ export class UserUncheckedCreateWithoutLocationsInput {
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(3)
+  @Validator.MaxLength(3)
   name?: string;
   @Field(() => String, { nullable: false })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(8)
+  @Validator.MaxLength(8)
   password!: string;
 }
 
@@ -1633,12 +1632,12 @@ export class UserUncheckedCreateInput {
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(3)
+  @Validator.MaxLength(3)
   name?: string;
   @Field(() => String, { nullable: false })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(8)
+  @Validator.MaxLength(8)
   password!: string;
   @Field(() => LocationUncheckedCreateNestedManyWithoutAuthorInput, {
     nullable: true,
@@ -1658,12 +1657,12 @@ export class UserUncheckedUpdateManyInput {
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(3)
+  @Validator.MaxLength(3)
   name?: string;
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(8)
+  @Validator.MaxLength(8)
   password?: string;
 }
 
@@ -1677,12 +1676,12 @@ export class UserUncheckedUpdateWithoutLocationsInput {
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(3)
+  @Validator.MaxLength(3)
   name?: string;
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(8)
+  @Validator.MaxLength(8)
   password?: string;
 }
 
@@ -1696,12 +1695,12 @@ export class UserUncheckedUpdateInput {
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(3)
+  @Validator.MaxLength(3)
   name?: string;
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(8)
+  @Validator.MaxLength(8)
   password?: string;
   @Field(() => LocationUncheckedUpdateManyWithoutAuthorNestedInput, {
     nullable: true,
@@ -1721,12 +1720,12 @@ export class UserUpdateManyMutationInput {
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(3)
+  @Validator.MaxLength(3)
   name?: string;
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(8)
+  @Validator.MaxLength(8)
   password?: string;
 }
 
@@ -1765,12 +1764,12 @@ export class UserUpdateWithoutLocationsInput {
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(3)
+  @Validator.MaxLength(3)
   name?: string;
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(8)
+  @Validator.MaxLength(8)
   password?: string;
 }
 
@@ -1784,12 +1783,12 @@ export class UserUpdateInput {
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(3)
+  @Validator.MaxLength(3)
   name?: string;
   @Field(() => String, { nullable: true })
   @Validator.IsString()
   @Validator.MaxLength(100)
-  @Validator.MinLength(8)
+  @Validator.MaxLength(8)
   password?: string;
   @Field(() => LocationUpdateManyWithoutAuthorNestedInput, { nullable: true })
   locations?: InstanceType<typeof LocationUpdateManyWithoutAuthorNestedInput>;
