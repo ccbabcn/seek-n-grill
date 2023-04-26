@@ -3,7 +3,7 @@ const Head = (): JSX.Element => {
     <>
       <title>My NextJS App</title>
     </>
-  );
-};
+  )
+}
 
-export default Head;
+export default Head
