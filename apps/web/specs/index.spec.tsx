@@ -1,9 +1,5 @@
 import Page from '../app/page'
 
-// //MOCK USERS FETCH
-// import { gql } from '../data-access/graphql-client'
-// gql.GetUsers = jest.fn().mockResolvedValue({ users: [] })
-
 /**
  * @param {function} Component
  * @param {*} props
