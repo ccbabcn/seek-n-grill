@@ -21,6 +21,9 @@
       "@seek-n-grill/api/feature-user": ["libs/api/feature-user/src/index.ts"],
       "@seek-n-grill/api/generated-db-types": [
         "libs/api/generated-db-types/src/index.ts"
+      ],
+      "@seek-n-grill/web/data-access-graphql": [
+        "libs/web/data-access-graphql/src/index.ts"
       ]
     }
   },

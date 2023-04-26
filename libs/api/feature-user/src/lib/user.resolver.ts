@@ -14,6 +14,7 @@ export class UserResolver {
 
   @Mutation(() => User)
   createUser(@Args() createOneUserArgs: CreateOneUserArgs) {
+    console.log({ createOneUserArgs });
     return this.userService.create(createOneUserArgs);
   }
 
