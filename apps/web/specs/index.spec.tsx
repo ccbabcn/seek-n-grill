@@ -1,4 +1,3 @@
-import React from 'react'
 import { render } from '@testing-library/react'
 import Page from '../app/page'
 import { gql } from '../data-access/graphql-client'
@@ -16,15 +15,16 @@ async function resolvedComponent({ Component, props = {} }) {
   return () => ComponentResolved
 }
 
-describe('Index', () => {
-  it('should render successfully', async () => {
-    const { baseElement } = render((await Page()) as unknown as React.ReactElement)
-    expect(baseElement).toBeTruthy()
-  })
-})
-describe('Page component test alternative approach', () => {
+describe('Pageresolved resolves Pase promise correctly', () => {
   it('should render successfully the async Page component', async () => {
     const PageResolved = await resolvedComponent({ Component: Page })
     expect(PageResolved).toBeTruthy()
+  })
+})
+
+describe('Index', () => {
+  it('Page component should render successfully an htlm element', async () => {
+    const { baseElement } = render(await Page())
+    expect(baseElement).toBeTruthy()
   })
 })

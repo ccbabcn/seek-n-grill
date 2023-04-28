@@ -27,12 +27,6 @@
       "options": {
         "jestConfig": "libs/api/feature-user/jest.config.ts",
         "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
       }
     }
   },

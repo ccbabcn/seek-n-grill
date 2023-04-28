@@ -1,11 +1,11 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql'
 import { UserService } from './user.service'
 import {
-  User,
   CreateOneUserArgs,
   FindUniqueUserArgs,
   UpdateOneUserArgs,
-  DeleteOneUserArgs
+  DeleteOneUserArgs,
+  User
 } from '@seek-n-grill/api/generated-db-types'
 
 @Resolver(() => User)
@@ -14,7 +14,6 @@ export class UserResolver {
 
   @Mutation(() => User)
   createUser(@Args() createOneUserArgs: CreateOneUserArgs) {
-    console.log({ createOneUserArgs })
     return this.userService.create(createOneUserArgs)
   }
 
