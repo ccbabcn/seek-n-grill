@@ -1,3 +1,6 @@
-import { getGraphqlClient } from '@seek-n-grill/web/data-access-graphql';
+import { getGraphqlClient } from '@seek-n-grill/web/data-access-graphql'
+import { webEnvironment } from '../environments/environment'
 
-export const gql = getGraphqlClient('http://localhost:3000/graphql');
+const { api } = webEnvironment
+
+export const gql = getGraphqlClient(api.gqlUrl)

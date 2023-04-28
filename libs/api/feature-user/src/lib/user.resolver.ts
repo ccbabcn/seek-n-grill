@@ -1,12 +1,12 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { UserService } from './user.service';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql'
+import { UserService } from './user.service'
 import {
-  User,
   CreateOneUserArgs,
   FindUniqueUserArgs,
   UpdateOneUserArgs,
   DeleteOneUserArgs,
-} from '@seek-n-grill/api/generated-db-types';
+  User
+} from '@seek-n-grill/api/generated-db-types'
 
 @Resolver(() => User)
 export class UserResolver {
@@ -14,27 +14,26 @@ export class UserResolver {
 
   @Mutation(() => User)
   createUser(@Args() createOneUserArgs: CreateOneUserArgs) {
-    console.log({ createOneUserArgs });
-    return this.userService.create(createOneUserArgs);
+    return this.userService.create(createOneUserArgs)
   }
 
   @Query(() => [User])
   users(): Promise<User[]> {
-    return this.userService.findAll();
+    return this.userService.findAll()
   }
 
   @Query(() => User)
   user(@Args() findUniqueUserArgs: FindUniqueUserArgs) {
-    return this.userService.findOne(findUniqueUserArgs);
+    return this.userService.findOne(findUniqueUserArgs)
   }
 
   @Mutation(() => User)
   updateUser(@Args() updateOneUserArgs: UpdateOneUserArgs) {
-    return this.userService.update(updateOneUserArgs);
+    return this.userService.update(updateOneUserArgs)
   }
 
   @Mutation(() => User)
   removeUser(@Args() deleteOneUserArgs: DeleteOneUserArgs) {
-    return this.userService.remove(deleteOneUserArgs);
+    return this.userService.remove(deleteOneUserArgs)
   }
 }

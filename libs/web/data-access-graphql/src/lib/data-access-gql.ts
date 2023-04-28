@@ -1,4 +1,4 @@
-import { gql } from 'graphql-request';
+import { gql } from 'graphql-request'
 
 export const GET_USERS = gql`
   query GetUsers {
@@ -8,7 +8,7 @@ export const GET_USERS = gql`
       name
     }
   }
-`;
+`
 
 export const CREATE_USER = gql`
   mutation CreateUser($name: String!, $password: String!, $email: String!) {
@@ -18,4 +18,4 @@ export const CREATE_USER = gql`
       name
     }
   }
-`;
+`

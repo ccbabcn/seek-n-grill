@@ -1,9 +1,9 @@
-import Image from 'next/image';
-import { gql } from '../data-access/graphql-client';
+import Image from 'next/image'
+import { gql } from '../data-access/graphql-client'
 
 const Page = async (): Promise<JSX.Element> => {
-  const { users } = await gql.GetUsers();
-  console.log(users);
+  const { users } = await gql.GetUsers()
+  console.log(users)
 
   return (
     <figure className="rounded-xl bg-slate-100 p-8 text-white dark:bg-slate-800 md:flex md:p-0">
@@ -17,20 +17,17 @@ const Page = async (): Promise<JSX.Element> => {
       <div className="space-y-4 pt-6 text-center md:p-8 md:text-left">
         <blockquote>
           <p className="text-lg font-medium">
-            “Tailwind CSS is the only framework that Ive seen scale on large
-            teams. Its easy to customize, adapts to any design, and the build
-            size is tiny.”
+            “Tailwind CSS is the only framework that Ive seen scale on large teams. Its easy to
+            customize, adapts to any design, and the build size is tiny.”
           </p>
         </blockquote>
         <figcaption className="font-medium">
           <div className="text-sky-500 dark:text-sky-400">Sarah Dayan</div>
-          <div className="text-slate-700 dark:text-slate-500">
-            Staff Engineer, Algolia
-          </div>
+          <div className="text-slate-700 dark:text-slate-500">Staff Engineer, Algolia</div>
         </figcaption>
       </div>
     </figure>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page
