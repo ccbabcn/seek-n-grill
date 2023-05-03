@@ -12,6 +12,18 @@ export type Scalars = {
   Float: number;
 };
 
+export type Location = {
+  __typename?: 'Location';
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  mainImageUrl?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  open?: Maybe<Scalars['Boolean']>;
+  rgbBackground?: Maybe<RgbBackground>;
+  rgbBackgroundId: Scalars['String'];
+  score?: Maybe<Scalars['Float']>;
+};
+
 export type LocationAvgAggregate = {
   __typename?: 'LocationAvgAggregate';
   id?: Maybe<Scalars['Float']>;
@@ -21,29 +33,44 @@ export type LocationAvgAggregate = {
 export type LocationCountAggregate = {
   __typename?: 'LocationCountAggregate';
   _all: Scalars['Int'];
-  content: Scalars['Int'];
+  description: Scalars['Int'];
   id: Scalars['Int'];
+  mainImageUrl: Scalars['Int'];
+  name: Scalars['Int'];
   open: Scalars['Int'];
+  rgbBackgroundId: Scalars['Int'];
   score: Scalars['Int'];
-  title: Scalars['Int'];
+};
+
+export type LocationCreateInput = {
+  description?: InputMaybe<Scalars['String']>;
+  mainImageUrl?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  open?: InputMaybe<Scalars['Boolean']>;
+  rgbBackground?: InputMaybe<RgbBackgroundCreateNestedOneWithoutLocationInput>;
+  score?: InputMaybe<Scalars['Float']>;
 };
 
 export type LocationMaxAggregate = {
   __typename?: 'LocationMaxAggregate';
-  content?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['Int']>;
+  mainImageUrl?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
   open?: Maybe<Scalars['Boolean']>;
+  rgbBackgroundId?: Maybe<Scalars['String']>;
   score?: Maybe<Scalars['Float']>;
-  title?: Maybe<Scalars['String']>;
 };
 
 export type LocationMinAggregate = {
   __typename?: 'LocationMinAggregate';
-  content?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['Int']>;
+  mainImageUrl?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
   open?: Maybe<Scalars['Boolean']>;
+  rgbBackgroundId?: Maybe<Scalars['String']>;
   score?: Maybe<Scalars['Float']>;
-  title?: Maybe<Scalars['String']>;
 };
 
 export type LocationSumAggregate = {
@@ -52,11 +79,33 @@ export type LocationSumAggregate = {
   score?: Maybe<Scalars['Float']>;
 };
 
+export type LocationUpdateInput = {
+  description?: InputMaybe<Scalars['String']>;
+  mainImageUrl?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  open?: InputMaybe<Scalars['Boolean']>;
+  rgbBackground?: InputMaybe<RgbBackgroundUpdateOneWithoutLocationNestedInput>;
+  score?: InputMaybe<Scalars['Float']>;
+};
+
+export type LocationWhereUniqueInput = {
+  id?: InputMaybe<Scalars['Int']>;
+  rgbBackgroundId?: InputMaybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  createLocation: Location;
   createUser: User;
+  removeLocation: Location;
   removeUser: User;
+  updateLocation: Location;
   updateUser: User;
+};
+
+
+export type MutationCreateLocationArgs = {
+  data: LocationCreateInput;
 };
 
 
@@ -65,8 +114,19 @@ export type MutationCreateUserArgs = {
 };
 
 
+export type MutationRemoveLocationArgs = {
+  where: LocationWhereUniqueInput;
+};
+
+
 export type MutationRemoveUserArgs = {
   where: UserWhereUniqueInput;
+};
+
+
+export type MutationUpdateLocationArgs = {
+  data: LocationUpdateInput;
+  where: LocationWhereUniqueInput;
 };
 
 
@@ -77,13 +137,113 @@ export type MutationUpdateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  location: Location;
+  locations: Array<Location>;
   user: User;
   users: Array<User>;
 };
 
 
+export type QueryLocationArgs = {
+  where: LocationWhereUniqueInput;
+};
+
+
 export type QueryUserArgs = {
   where: UserWhereUniqueInput;
+};
+
+export type RgbBackground = {
+  __typename?: 'RgbBackground';
+  b: Scalars['Int'];
+  g: Scalars['Int'];
+  id: Scalars['ID'];
+  r: Scalars['Int'];
+};
+
+export type RgbBackgroundAvgAggregate = {
+  __typename?: 'RgbBackgroundAvgAggregate';
+  b?: Maybe<Scalars['Float']>;
+  g?: Maybe<Scalars['Float']>;
+  r?: Maybe<Scalars['Float']>;
+};
+
+export type RgbBackgroundCountAggregate = {
+  __typename?: 'RgbBackgroundCountAggregate';
+  _all: Scalars['Int'];
+  b: Scalars['Int'];
+  g: Scalars['Int'];
+  id: Scalars['Int'];
+  r: Scalars['Int'];
+};
+
+export type RgbBackgroundCreateNestedOneWithoutLocationInput = {
+  connect?: InputMaybe<RgbBackgroundWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<RgbBackgroundCreateOrConnectWithoutLocationInput>;
+  create?: InputMaybe<RgbBackgroundCreateWithoutLocationInput>;
+};
+
+export type RgbBackgroundCreateOrConnectWithoutLocationInput = {
+  create: RgbBackgroundCreateWithoutLocationInput;
+  where: RgbBackgroundWhereUniqueInput;
+};
+
+export type RgbBackgroundCreateWithoutLocationInput = {
+  a?: InputMaybe<Scalars['Float']>;
+  b: Scalars['Int'];
+  g: Scalars['Int'];
+  id?: InputMaybe<Scalars['String']>;
+  r: Scalars['Int'];
+};
+
+export type RgbBackgroundMaxAggregate = {
+  __typename?: 'RgbBackgroundMaxAggregate';
+  b?: Maybe<Scalars['Int']>;
+  g?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['String']>;
+  r?: Maybe<Scalars['Int']>;
+};
+
+export type RgbBackgroundMinAggregate = {
+  __typename?: 'RgbBackgroundMinAggregate';
+  b?: Maybe<Scalars['Int']>;
+  g?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['String']>;
+  r?: Maybe<Scalars['Int']>;
+};
+
+export type RgbBackgroundSumAggregate = {
+  __typename?: 'RgbBackgroundSumAggregate';
+  b?: Maybe<Scalars['Int']>;
+  g?: Maybe<Scalars['Int']>;
+  r?: Maybe<Scalars['Int']>;
+};
+
+export type RgbBackgroundUpdateOneWithoutLocationNestedInput = {
+  connect?: InputMaybe<RgbBackgroundWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<RgbBackgroundCreateOrConnectWithoutLocationInput>;
+  create?: InputMaybe<RgbBackgroundCreateWithoutLocationInput>;
+  delete?: InputMaybe<Scalars['Boolean']>;
+  disconnect?: InputMaybe<Scalars['Boolean']>;
+  update?: InputMaybe<RgbBackgroundUpdateWithoutLocationInput>;
+  upsert?: InputMaybe<RgbBackgroundUpsertWithoutLocationInput>;
+};
+
+export type RgbBackgroundUpdateWithoutLocationInput = {
+  a?: InputMaybe<Scalars['Float']>;
+  b?: InputMaybe<Scalars['Int']>;
+  g?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['String']>;
+  r?: InputMaybe<Scalars['Int']>;
+};
+
+export type RgbBackgroundUpsertWithoutLocationInput = {
+  create: RgbBackgroundCreateWithoutLocationInput;
+  update: RgbBackgroundUpdateWithoutLocationInput;
+};
+
+export type RgbBackgroundWhereUniqueInput = {
+  id?: InputMaybe<Scalars['String']>;
 };
 
 export type User = {

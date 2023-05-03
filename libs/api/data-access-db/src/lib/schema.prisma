@@ -43,9 +43,39 @@ model User {
 }
 
 model Location {
-  id      Int      @id @default(autoincrement())
-  title   String
-  content String?
-  open    Boolean? @default(false)
-  score   Float?
+  id                 Int           @id @default(autoincrement())
+  /// @Validator.IsString()
+  /// @Validator.MaxLength(100)
+  /// @Validator.MinLength(3)
+  name               String
+  /// @Validator.IsString()
+  /// @Validator.MaxLength(1000)
+  /// @Validator.MinLength(5)
+  description        String?
+  open               Boolean?      @default(false)
+  score              Float?
+  mainImageUrl       String?
+  rgbBackground      RgbBackground? @relation(fields: [rgbBackgroundId], references: [id])
+  rgbBackgroundId    String        @unique
+}
+
+model RgbBackground {
+  id       String    @id @default(uuid())
+  /// @Validator.IsInt()
+  /// @Validator.Min(0)
+  /// @Validator.Max(255)
+  r        Int
+  /// @Validator.IsInt()
+  /// @Validator.Min(0)
+  /// @Validator.Max(255)
+  g        Int
+  /// @Validator.IsInt()
+  /// @Validator.Min(0)
+  /// @Validator.Max(255)
+  b        Int
+  /// @HideField()
+  a        Float?
+  //----Relations----//
+  /// @HideField()
+  Location Location?
 }
