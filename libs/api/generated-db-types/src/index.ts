@@ -6,16 +6,24 @@ import { ValidateNested } from 'class-validator';
 import { Int } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { Float } from '@nestjs/graphql';
+import * as Validator from 'class-validator';
 import { registerEnumType } from '@nestjs/graphql';
 import { ID } from '@nestjs/graphql';
 import { HideField } from '@nestjs/graphql';
-import * as Validator from 'class-validator';
 
 export enum UserScalarFieldEnum {
     id = "id",
     email = "email",
     name = "name",
     password = "password"
+}
+
+export enum RgbBackgroundScalarFieldEnum {
+    id = "id",
+    r = "r",
+    g = "g",
+    b = "b",
+    a = "a"
 }
 
 export enum TransactionIsolationLevel {
@@ -37,16 +45,19 @@ export enum QueryMode {
 
 export enum LocationScalarFieldEnum {
     id = "id",
-    title = "title",
-    content = "content",
+    name = "name",
+    description = "description",
     open = "open",
-    score = "score"
+    score = "score",
+    mainImageUrl = "mainImageUrl",
+    rgbBackgroundId = "rgbBackgroundId"
 }
 
 registerEnumType(LocationScalarFieldEnum, { name: 'LocationScalarFieldEnum', description: undefined })
 registerEnumType(QueryMode, { name: 'QueryMode', description: undefined })
 registerEnumType(SortOrder, { name: 'SortOrder', description: undefined })
 registerEnumType(TransactionIsolationLevel, { name: 'TransactionIsolationLevel', description: undefined })
+registerEnumType(RgbBackgroundScalarFieldEnum, { name: 'RgbBackgroundScalarFieldEnum', description: undefined })
 registerEnumType(UserScalarFieldEnum, { name: 'UserScalarFieldEnum', description: undefined })
 
 @ObjectType()
@@ -222,13 +233,17 @@ export class LocationCountAggregateInput {
     @Field(() => Boolean, {nullable:true})
     id?: true;
     @Field(() => Boolean, {nullable:true})
-    title?: true;
+    name?: true;
     @Field(() => Boolean, {nullable:true})
-    content?: true;
+    description?: true;
     @Field(() => Boolean, {nullable:true})
     open?: true;
     @Field(() => Boolean, {nullable:true})
     score?: true;
+    @Field(() => Boolean, {nullable:true})
+    mainImageUrl?: true;
+    @Field(() => Boolean, {nullable:true})
+    rgbBackgroundId?: true;
     @Field(() => Boolean, {nullable:true})
     _all?: true;
 }
@@ -238,13 +253,17 @@ export class LocationCountAggregate {
     @Field(() => Int, {nullable:false})
     id!: number;
     @Field(() => Int, {nullable:false})
-    title!: number;
+    name!: number;
     @Field(() => Int, {nullable:false})
-    content!: number;
+    description!: number;
     @Field(() => Int, {nullable:false})
     open!: number;
     @Field(() => Int, {nullable:false})
     score!: number;
+    @Field(() => Int, {nullable:false})
+    mainImageUrl!: number;
+    @Field(() => Int, {nullable:false})
+    rgbBackgroundId!: number;
     @Field(() => Int, {nullable:false})
     _all!: number;
 }
@@ -254,13 +273,17 @@ export class LocationCountOrderByAggregateInput {
     @Field(() => SortOrder, {nullable:true})
     id?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
-    title?: keyof typeof SortOrder;
+    name?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
-    content?: keyof typeof SortOrder;
+    description?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     open?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     score?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    mainImageUrl?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    rgbBackgroundId?: keyof typeof SortOrder;
 }
 
 @InputType()
@@ -268,25 +291,88 @@ export class LocationCreateManyInput {
     @Field(() => Int, {nullable:true})
     id?: number;
     @Field(() => String, {nullable:false})
-    title!: string;
+    @Validator.IsString()
+    @Validator.MaxLength(100)
+    @Validator.MinLength(3)
+    name!: string;
     @Field(() => String, {nullable:true})
-    content?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(1000)
+    @Validator.MinLength(5)
+    description?: string;
     @Field(() => Boolean, {nullable:true})
     open?: boolean;
     @Field(() => Float, {nullable:true})
     score?: number;
+    @Field(() => String, {nullable:true})
+    mainImageUrl?: string;
+    @Field(() => String, {nullable:false})
+    rgbBackgroundId!: string;
+}
+
+@InputType()
+export class LocationCreateNestedOneWithoutRgbBackgroundInput {
+    @Field(() => LocationCreateWithoutRgbBackgroundInput, {nullable:true})
+    @Type(() => LocationCreateWithoutRgbBackgroundInput)
+    create?: InstanceType<typeof LocationCreateWithoutRgbBackgroundInput>;
+    @Field(() => LocationCreateOrConnectWithoutRgbBackgroundInput, {nullable:true})
+    @Type(() => LocationCreateOrConnectWithoutRgbBackgroundInput)
+    connectOrCreate?: InstanceType<typeof LocationCreateOrConnectWithoutRgbBackgroundInput>;
+    @Field(() => LocationWhereUniqueInput, {nullable:true})
+    @Type(() => LocationWhereUniqueInput)
+    connect?: InstanceType<typeof LocationWhereUniqueInput>;
+}
+
+@InputType()
+export class LocationCreateOrConnectWithoutRgbBackgroundInput {
+    @Field(() => LocationWhereUniqueInput, {nullable:false})
+    @Type(() => LocationWhereUniqueInput)
+    where!: InstanceType<typeof LocationWhereUniqueInput>;
+    @Field(() => LocationCreateWithoutRgbBackgroundInput, {nullable:false})
+    @Type(() => LocationCreateWithoutRgbBackgroundInput)
+    create!: InstanceType<typeof LocationCreateWithoutRgbBackgroundInput>;
+}
+
+@InputType()
+export class LocationCreateWithoutRgbBackgroundInput {
+    @Field(() => String, {nullable:false})
+    @Validator.IsString()
+    @Validator.MaxLength(100)
+    @Validator.MinLength(3)
+    name!: string;
+    @Field(() => String, {nullable:true})
+    @Validator.IsString()
+    @Validator.MaxLength(1000)
+    @Validator.MinLength(5)
+    description?: string;
+    @Field(() => Boolean, {nullable:true})
+    open?: boolean;
+    @Field(() => Float, {nullable:true})
+    score?: number;
+    @Field(() => String, {nullable:true})
+    mainImageUrl?: string;
 }
 
 @InputType()
 export class LocationCreateInput {
     @Field(() => String, {nullable:false})
-    title!: string;
+    @Validator.IsString()
+    @Validator.MaxLength(100)
+    @Validator.MinLength(3)
+    name!: string;
     @Field(() => String, {nullable:true})
-    content?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(1000)
+    @Validator.MinLength(5)
+    description?: string;
     @Field(() => Boolean, {nullable:true})
     open?: boolean;
     @Field(() => Float, {nullable:true})
     score?: number;
+    @Field(() => String, {nullable:true})
+    mainImageUrl?: string;
+    @Field(() => RgbBackgroundCreateNestedOneWithoutLocationInput, {nullable:true})
+    rgbBackground?: InstanceType<typeof RgbBackgroundCreateNestedOneWithoutLocationInput>;
 }
 
 @ArgsType()
@@ -322,13 +408,23 @@ export class LocationGroupBy {
     @Field(() => Int, {nullable:false})
     id!: number;
     @Field(() => String, {nullable:false})
-    title!: string;
+    @Validator.IsString()
+    @Validator.MaxLength(100)
+    @Validator.MinLength(3)
+    name!: string;
     @Field(() => String, {nullable:true})
-    content?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(1000)
+    @Validator.MinLength(5)
+    description?: string;
     @Field(() => Boolean, {nullable:true})
     open?: boolean;
     @Field(() => Float, {nullable:true})
     score?: number;
+    @Field(() => String, {nullable:true})
+    mainImageUrl?: string;
+    @Field(() => String, {nullable:false})
+    rgbBackgroundId!: string;
     @Field(() => LocationCountAggregate, {nullable:true})
     _count?: InstanceType<typeof LocationCountAggregate>;
     @Field(() => LocationAvgAggregate, {nullable:true})
@@ -346,13 +442,17 @@ export class LocationMaxAggregateInput {
     @Field(() => Boolean, {nullable:true})
     id?: true;
     @Field(() => Boolean, {nullable:true})
-    title?: true;
+    name?: true;
     @Field(() => Boolean, {nullable:true})
-    content?: true;
+    description?: true;
     @Field(() => Boolean, {nullable:true})
     open?: true;
     @Field(() => Boolean, {nullable:true})
     score?: true;
+    @Field(() => Boolean, {nullable:true})
+    mainImageUrl?: true;
+    @Field(() => Boolean, {nullable:true})
+    rgbBackgroundId?: true;
 }
 
 @ObjectType()
@@ -360,13 +460,23 @@ export class LocationMaxAggregate {
     @Field(() => Int, {nullable:true})
     id?: number;
     @Field(() => String, {nullable:true})
-    title?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(100)
+    @Validator.MinLength(3)
+    name?: string;
     @Field(() => String, {nullable:true})
-    content?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(1000)
+    @Validator.MinLength(5)
+    description?: string;
     @Field(() => Boolean, {nullable:true})
     open?: boolean;
     @Field(() => Float, {nullable:true})
     score?: number;
+    @Field(() => String, {nullable:true})
+    mainImageUrl?: string;
+    @Field(() => String, {nullable:true})
+    rgbBackgroundId?: string;
 }
 
 @InputType()
@@ -374,13 +484,17 @@ export class LocationMaxOrderByAggregateInput {
     @Field(() => SortOrder, {nullable:true})
     id?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
-    title?: keyof typeof SortOrder;
+    name?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
-    content?: keyof typeof SortOrder;
+    description?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     open?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     score?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    mainImageUrl?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    rgbBackgroundId?: keyof typeof SortOrder;
 }
 
 @InputType()
@@ -388,13 +502,17 @@ export class LocationMinAggregateInput {
     @Field(() => Boolean, {nullable:true})
     id?: true;
     @Field(() => Boolean, {nullable:true})
-    title?: true;
+    name?: true;
     @Field(() => Boolean, {nullable:true})
-    content?: true;
+    description?: true;
     @Field(() => Boolean, {nullable:true})
     open?: true;
     @Field(() => Boolean, {nullable:true})
     score?: true;
+    @Field(() => Boolean, {nullable:true})
+    mainImageUrl?: true;
+    @Field(() => Boolean, {nullable:true})
+    rgbBackgroundId?: true;
 }
 
 @ObjectType()
@@ -402,13 +520,23 @@ export class LocationMinAggregate {
     @Field(() => Int, {nullable:true})
     id?: number;
     @Field(() => String, {nullable:true})
-    title?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(100)
+    @Validator.MinLength(3)
+    name?: string;
     @Field(() => String, {nullable:true})
-    content?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(1000)
+    @Validator.MinLength(5)
+    description?: string;
     @Field(() => Boolean, {nullable:true})
     open?: boolean;
     @Field(() => Float, {nullable:true})
     score?: number;
+    @Field(() => String, {nullable:true})
+    mainImageUrl?: string;
+    @Field(() => String, {nullable:true})
+    rgbBackgroundId?: string;
 }
 
 @InputType()
@@ -416,13 +544,17 @@ export class LocationMinOrderByAggregateInput {
     @Field(() => SortOrder, {nullable:true})
     id?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
-    title?: keyof typeof SortOrder;
+    name?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
-    content?: keyof typeof SortOrder;
+    description?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     open?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     score?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    mainImageUrl?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    rgbBackgroundId?: keyof typeof SortOrder;
 }
 
 @InputType()
@@ -430,13 +562,17 @@ export class LocationOrderByWithAggregationInput {
     @Field(() => SortOrder, {nullable:true})
     id?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
-    title?: keyof typeof SortOrder;
+    name?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
-    content?: keyof typeof SortOrder;
+    description?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     open?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     score?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    mainImageUrl?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    rgbBackgroundId?: keyof typeof SortOrder;
     @Field(() => LocationCountOrderByAggregateInput, {nullable:true})
     _count?: InstanceType<typeof LocationCountOrderByAggregateInput>;
     @Field(() => LocationAvgOrderByAggregateInput, {nullable:true})
@@ -454,13 +590,27 @@ export class LocationOrderByWithRelationInput {
     @Field(() => SortOrder, {nullable:true})
     id?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
-    title?: keyof typeof SortOrder;
+    name?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
-    content?: keyof typeof SortOrder;
+    description?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     open?: keyof typeof SortOrder;
     @Field(() => SortOrder, {nullable:true})
     score?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    mainImageUrl?: keyof typeof SortOrder;
+    @Field(() => RgbBackgroundOrderByWithRelationInput, {nullable:true})
+    rgbBackground?: InstanceType<typeof RgbBackgroundOrderByWithRelationInput>;
+    @Field(() => SortOrder, {nullable:true})
+    rgbBackgroundId?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class LocationRelationFilter {
+    @Field(() => LocationWhereInput, {nullable:true})
+    is?: InstanceType<typeof LocationWhereInput>;
+    @Field(() => LocationWhereInput, {nullable:true})
+    isNot?: InstanceType<typeof LocationWhereInput>;
 }
 
 @InputType()
@@ -474,13 +624,17 @@ export class LocationScalarWhereWithAggregatesInput {
     @Field(() => IntWithAggregatesFilter, {nullable:true})
     id?: InstanceType<typeof IntWithAggregatesFilter>;
     @Field(() => StringWithAggregatesFilter, {nullable:true})
-    title?: InstanceType<typeof StringWithAggregatesFilter>;
+    name?: InstanceType<typeof StringWithAggregatesFilter>;
     @Field(() => StringWithAggregatesFilter, {nullable:true})
-    content?: InstanceType<typeof StringWithAggregatesFilter>;
+    description?: InstanceType<typeof StringWithAggregatesFilter>;
     @Field(() => BoolWithAggregatesFilter, {nullable:true})
     open?: InstanceType<typeof BoolWithAggregatesFilter>;
     @Field(() => FloatWithAggregatesFilter, {nullable:true})
     score?: InstanceType<typeof FloatWithAggregatesFilter>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    mainImageUrl?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    rgbBackgroundId?: InstanceType<typeof StringWithAggregatesFilter>;
 }
 
 @InputType()
@@ -508,17 +662,62 @@ export class LocationSumOrderByAggregateInput {
 }
 
 @InputType()
-export class LocationUncheckedCreateInput {
+export class LocationUncheckedCreateNestedOneWithoutRgbBackgroundInput {
+    @Field(() => LocationCreateWithoutRgbBackgroundInput, {nullable:true})
+    @Type(() => LocationCreateWithoutRgbBackgroundInput)
+    create?: InstanceType<typeof LocationCreateWithoutRgbBackgroundInput>;
+    @Field(() => LocationCreateOrConnectWithoutRgbBackgroundInput, {nullable:true})
+    @Type(() => LocationCreateOrConnectWithoutRgbBackgroundInput)
+    connectOrCreate?: InstanceType<typeof LocationCreateOrConnectWithoutRgbBackgroundInput>;
+    @Field(() => LocationWhereUniqueInput, {nullable:true})
+    @Type(() => LocationWhereUniqueInput)
+    connect?: InstanceType<typeof LocationWhereUniqueInput>;
+}
+
+@InputType()
+export class LocationUncheckedCreateWithoutRgbBackgroundInput {
     @Field(() => Int, {nullable:true})
     id?: number;
     @Field(() => String, {nullable:false})
-    title!: string;
+    @Validator.IsString()
+    @Validator.MaxLength(100)
+    @Validator.MinLength(3)
+    name!: string;
     @Field(() => String, {nullable:true})
-    content?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(1000)
+    @Validator.MinLength(5)
+    description?: string;
     @Field(() => Boolean, {nullable:true})
     open?: boolean;
     @Field(() => Float, {nullable:true})
     score?: number;
+    @Field(() => String, {nullable:true})
+    mainImageUrl?: string;
+}
+
+@InputType()
+export class LocationUncheckedCreateInput {
+    @Field(() => Int, {nullable:true})
+    id?: number;
+    @Field(() => String, {nullable:false})
+    @Validator.IsString()
+    @Validator.MaxLength(100)
+    @Validator.MinLength(3)
+    name!: string;
+    @Field(() => String, {nullable:true})
+    @Validator.IsString()
+    @Validator.MaxLength(1000)
+    @Validator.MinLength(5)
+    description?: string;
+    @Field(() => Boolean, {nullable:true})
+    open?: boolean;
+    @Field(() => Float, {nullable:true})
+    score?: number;
+    @Field(() => String, {nullable:true})
+    mainImageUrl?: string;
+    @Field(() => String, {nullable:false})
+    rgbBackgroundId!: string;
 }
 
 @InputType()
@@ -526,13 +725,68 @@ export class LocationUncheckedUpdateManyInput {
     @Field(() => Int, {nullable:true})
     id?: number;
     @Field(() => String, {nullable:true})
-    title?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(100)
+    @Validator.MinLength(3)
+    name?: string;
     @Field(() => String, {nullable:true})
-    content?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(1000)
+    @Validator.MinLength(5)
+    description?: string;
     @Field(() => Boolean, {nullable:true})
     open?: boolean;
     @Field(() => Float, {nullable:true})
     score?: number;
+    @Field(() => String, {nullable:true})
+    mainImageUrl?: string;
+    @Field(() => String, {nullable:true})
+    rgbBackgroundId?: string;
+}
+
+@InputType()
+export class LocationUncheckedUpdateOneWithoutRgbBackgroundNestedInput {
+    @Field(() => LocationCreateWithoutRgbBackgroundInput, {nullable:true})
+    @Type(() => LocationCreateWithoutRgbBackgroundInput)
+    create?: InstanceType<typeof LocationCreateWithoutRgbBackgroundInput>;
+    @Field(() => LocationCreateOrConnectWithoutRgbBackgroundInput, {nullable:true})
+    @Type(() => LocationCreateOrConnectWithoutRgbBackgroundInput)
+    connectOrCreate?: InstanceType<typeof LocationCreateOrConnectWithoutRgbBackgroundInput>;
+    @Field(() => LocationUpsertWithoutRgbBackgroundInput, {nullable:true})
+    @Type(() => LocationUpsertWithoutRgbBackgroundInput)
+    upsert?: InstanceType<typeof LocationUpsertWithoutRgbBackgroundInput>;
+    @Field(() => Boolean, {nullable:true})
+    disconnect?: boolean;
+    @Field(() => Boolean, {nullable:true})
+    delete?: boolean;
+    @Field(() => LocationWhereUniqueInput, {nullable:true})
+    @Type(() => LocationWhereUniqueInput)
+    connect?: InstanceType<typeof LocationWhereUniqueInput>;
+    @Field(() => LocationUpdateWithoutRgbBackgroundInput, {nullable:true})
+    @Type(() => LocationUpdateWithoutRgbBackgroundInput)
+    update?: InstanceType<typeof LocationUpdateWithoutRgbBackgroundInput>;
+}
+
+@InputType()
+export class LocationUncheckedUpdateWithoutRgbBackgroundInput {
+    @Field(() => Int, {nullable:true})
+    id?: number;
+    @Field(() => String, {nullable:true})
+    @Validator.IsString()
+    @Validator.MaxLength(100)
+    @Validator.MinLength(3)
+    name?: string;
+    @Field(() => String, {nullable:true})
+    @Validator.IsString()
+    @Validator.MaxLength(1000)
+    @Validator.MinLength(5)
+    description?: string;
+    @Field(() => Boolean, {nullable:true})
+    open?: boolean;
+    @Field(() => Float, {nullable:true})
+    score?: number;
+    @Field(() => String, {nullable:true})
+    mainImageUrl?: string;
 }
 
 @InputType()
@@ -540,43 +794,126 @@ export class LocationUncheckedUpdateInput {
     @Field(() => Int, {nullable:true})
     id?: number;
     @Field(() => String, {nullable:true})
-    title?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(100)
+    @Validator.MinLength(3)
+    name?: string;
     @Field(() => String, {nullable:true})
-    content?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(1000)
+    @Validator.MinLength(5)
+    description?: string;
     @Field(() => Boolean, {nullable:true})
     open?: boolean;
     @Field(() => Float, {nullable:true})
     score?: number;
+    @Field(() => String, {nullable:true})
+    mainImageUrl?: string;
+    @Field(() => String, {nullable:true})
+    rgbBackgroundId?: string;
 }
 
 @InputType()
 export class LocationUpdateManyMutationInput {
     @Field(() => String, {nullable:true})
-    title?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(100)
+    @Validator.MinLength(3)
+    name?: string;
     @Field(() => String, {nullable:true})
-    content?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(1000)
+    @Validator.MinLength(5)
+    description?: string;
     @Field(() => Boolean, {nullable:true})
     open?: boolean;
     @Field(() => Float, {nullable:true})
     score?: number;
+    @Field(() => String, {nullable:true})
+    mainImageUrl?: string;
+}
+
+@InputType()
+export class LocationUpdateOneWithoutRgbBackgroundNestedInput {
+    @Field(() => LocationCreateWithoutRgbBackgroundInput, {nullable:true})
+    @Type(() => LocationCreateWithoutRgbBackgroundInput)
+    create?: InstanceType<typeof LocationCreateWithoutRgbBackgroundInput>;
+    @Field(() => LocationCreateOrConnectWithoutRgbBackgroundInput, {nullable:true})
+    @Type(() => LocationCreateOrConnectWithoutRgbBackgroundInput)
+    connectOrCreate?: InstanceType<typeof LocationCreateOrConnectWithoutRgbBackgroundInput>;
+    @Field(() => LocationUpsertWithoutRgbBackgroundInput, {nullable:true})
+    @Type(() => LocationUpsertWithoutRgbBackgroundInput)
+    upsert?: InstanceType<typeof LocationUpsertWithoutRgbBackgroundInput>;
+    @Field(() => Boolean, {nullable:true})
+    disconnect?: boolean;
+    @Field(() => Boolean, {nullable:true})
+    delete?: boolean;
+    @Field(() => LocationWhereUniqueInput, {nullable:true})
+    @Type(() => LocationWhereUniqueInput)
+    connect?: InstanceType<typeof LocationWhereUniqueInput>;
+    @Field(() => LocationUpdateWithoutRgbBackgroundInput, {nullable:true})
+    @Type(() => LocationUpdateWithoutRgbBackgroundInput)
+    update?: InstanceType<typeof LocationUpdateWithoutRgbBackgroundInput>;
+}
+
+@InputType()
+export class LocationUpdateWithoutRgbBackgroundInput {
+    @Field(() => String, {nullable:true})
+    @Validator.IsString()
+    @Validator.MaxLength(100)
+    @Validator.MinLength(3)
+    name?: string;
+    @Field(() => String, {nullable:true})
+    @Validator.IsString()
+    @Validator.MaxLength(1000)
+    @Validator.MinLength(5)
+    description?: string;
+    @Field(() => Boolean, {nullable:true})
+    open?: boolean;
+    @Field(() => Float, {nullable:true})
+    score?: number;
+    @Field(() => String, {nullable:true})
+    mainImageUrl?: string;
 }
 
 @InputType()
 export class LocationUpdateInput {
     @Field(() => String, {nullable:true})
-    title?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(100)
+    @Validator.MinLength(3)
+    name?: string;
     @Field(() => String, {nullable:true})
-    content?: string;
+    @Validator.IsString()
+    @Validator.MaxLength(1000)
+    @Validator.MinLength(5)
+    description?: string;
     @Field(() => Boolean, {nullable:true})
     open?: boolean;
     @Field(() => Float, {nullable:true})
     score?: number;
+    @Field(() => String, {nullable:true})
+    mainImageUrl?: string;
+    @Field(() => RgbBackgroundUpdateOneWithoutLocationNestedInput, {nullable:true})
+    rgbBackground?: InstanceType<typeof RgbBackgroundUpdateOneWithoutLocationNestedInput>;
+}
+
+@InputType()
+export class LocationUpsertWithoutRgbBackgroundInput {
+    @Field(() => LocationUpdateWithoutRgbBackgroundInput, {nullable:false})
+    @Type(() => LocationUpdateWithoutRgbBackgroundInput)
+    update!: InstanceType<typeof LocationUpdateWithoutRgbBackgroundInput>;
+    @Field(() => LocationCreateWithoutRgbBackgroundInput, {nullable:false})
+    @Type(() => LocationCreateWithoutRgbBackgroundInput)
+    create!: InstanceType<typeof LocationCreateWithoutRgbBackgroundInput>;
 }
 
 @InputType()
 export class LocationWhereUniqueInput {
     @Field(() => Int, {nullable:true})
     id?: number;
+    @Field(() => String, {nullable:true})
+    rgbBackgroundId?: string;
 }
 
 @InputType()
@@ -590,13 +927,19 @@ export class LocationWhereInput {
     @Field(() => IntFilter, {nullable:true})
     id?: InstanceType<typeof IntFilter>;
     @Field(() => StringFilter, {nullable:true})
-    title?: InstanceType<typeof StringFilter>;
+    name?: InstanceType<typeof StringFilter>;
     @Field(() => StringFilter, {nullable:true})
-    content?: InstanceType<typeof StringFilter>;
+    description?: InstanceType<typeof StringFilter>;
     @Field(() => BoolFilter, {nullable:true})
     open?: InstanceType<typeof BoolFilter>;
     @Field(() => FloatFilter, {nullable:true})
     score?: InstanceType<typeof FloatFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    mainImageUrl?: InstanceType<typeof StringFilter>;
+    @Field(() => RgbBackgroundRelationFilter, {nullable:true})
+    rgbBackground?: InstanceType<typeof RgbBackgroundRelationFilter>;
+    @Field(() => StringFilter, {nullable:true})
+    rgbBackgroundId?: InstanceType<typeof StringFilter>;
 }
 
 @ObjectType()
@@ -604,13 +947,19 @@ export class Location {
     @Field(() => ID, {nullable:false})
     id!: number;
     @Field(() => String, {nullable:false})
-    title!: string;
+    name!: string;
     @Field(() => String, {nullable:true})
-    content!: string | null;
+    description!: string | null;
     @Field(() => Boolean, {nullable:true,defaultValue:false})
     open!: boolean | null;
     @Field(() => Float, {nullable:true})
     score!: number | null;
+    @Field(() => String, {nullable:true})
+    mainImageUrl!: string | null;
+    @Field(() => RgbBackground, {nullable:true})
+    rgbBackground?: InstanceType<typeof RgbBackground> | null;
+    @Field(() => String, {nullable:false})
+    rgbBackgroundId!: string;
 }
 
 @ArgsType()
@@ -839,6 +1188,916 @@ export class StringWithAggregatesFilter {
     _min?: InstanceType<typeof StringFilter>;
     @Field(() => StringFilter, {nullable:true})
     _max?: InstanceType<typeof StringFilter>;
+}
+
+@ObjectType()
+export class AggregateRgbBackground {
+    @Field(() => RgbBackgroundCountAggregate, {nullable:true})
+    _count?: InstanceType<typeof RgbBackgroundCountAggregate>;
+    @Field(() => RgbBackgroundAvgAggregate, {nullable:true})
+    _avg?: InstanceType<typeof RgbBackgroundAvgAggregate>;
+    @Field(() => RgbBackgroundSumAggregate, {nullable:true})
+    _sum?: InstanceType<typeof RgbBackgroundSumAggregate>;
+    @Field(() => RgbBackgroundMinAggregate, {nullable:true})
+    _min?: InstanceType<typeof RgbBackgroundMinAggregate>;
+    @Field(() => RgbBackgroundMaxAggregate, {nullable:true})
+    _max?: InstanceType<typeof RgbBackgroundMaxAggregate>;
+}
+
+@ArgsType()
+export class CreateManyRgbBackgroundArgs {
+    @Field(() => [RgbBackgroundCreateManyInput], {nullable:false})
+    @Type(() => RgbBackgroundCreateManyInput)
+    @ValidateNested()
+    data!: Array<RgbBackgroundCreateManyInput>;
+    @Field(() => Boolean, {nullable:true})
+    skipDuplicates?: boolean;
+}
+
+@ArgsType()
+export class CreateOneRgbBackgroundArgs {
+    @Field(() => RgbBackgroundCreateInput, {nullable:false})
+    @Type(() => RgbBackgroundCreateInput)
+    @ValidateNested()
+    data!: InstanceType<typeof RgbBackgroundCreateInput>;
+}
+
+@ArgsType()
+export class DeleteManyRgbBackgroundArgs {
+    @Field(() => RgbBackgroundWhereInput, {nullable:true})
+    @Type(() => RgbBackgroundWhereInput)
+    @ValidateNested()
+    where?: InstanceType<typeof RgbBackgroundWhereInput>;
+}
+
+@ArgsType()
+export class DeleteOneRgbBackgroundArgs {
+    @Field(() => RgbBackgroundWhereUniqueInput, {nullable:false})
+    @Type(() => RgbBackgroundWhereUniqueInput)
+    @ValidateNested()
+    where!: InstanceType<typeof RgbBackgroundWhereUniqueInput>;
+}
+
+@ArgsType()
+export class FindFirstRgbBackgroundOrThrowArgs {
+    @Field(() => RgbBackgroundWhereInput, {nullable:true})
+    @Type(() => RgbBackgroundWhereInput)
+    @ValidateNested()
+    where?: InstanceType<typeof RgbBackgroundWhereInput>;
+    @Field(() => [RgbBackgroundOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<RgbBackgroundOrderByWithRelationInput>;
+    @Field(() => RgbBackgroundWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof RgbBackgroundWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [RgbBackgroundScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof RgbBackgroundScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindFirstRgbBackgroundArgs {
+    @Field(() => RgbBackgroundWhereInput, {nullable:true})
+    @Type(() => RgbBackgroundWhereInput)
+    @ValidateNested()
+    where?: InstanceType<typeof RgbBackgroundWhereInput>;
+    @Field(() => [RgbBackgroundOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<RgbBackgroundOrderByWithRelationInput>;
+    @Field(() => RgbBackgroundWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof RgbBackgroundWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [RgbBackgroundScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof RgbBackgroundScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindManyRgbBackgroundArgs {
+    @Field(() => RgbBackgroundWhereInput, {nullable:true})
+    @Type(() => RgbBackgroundWhereInput)
+    @ValidateNested()
+    where?: InstanceType<typeof RgbBackgroundWhereInput>;
+    @Field(() => [RgbBackgroundOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<RgbBackgroundOrderByWithRelationInput>;
+    @Field(() => RgbBackgroundWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof RgbBackgroundWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => [RgbBackgroundScalarFieldEnum], {nullable:true})
+    distinct?: Array<keyof typeof RgbBackgroundScalarFieldEnum>;
+}
+
+@ArgsType()
+export class FindUniqueRgbBackgroundOrThrowArgs {
+    @Field(() => RgbBackgroundWhereUniqueInput, {nullable:false})
+    @Type(() => RgbBackgroundWhereUniqueInput)
+    @ValidateNested()
+    where!: InstanceType<typeof RgbBackgroundWhereUniqueInput>;
+}
+
+@ArgsType()
+export class FindUniqueRgbBackgroundArgs {
+    @Field(() => RgbBackgroundWhereUniqueInput, {nullable:false})
+    @Type(() => RgbBackgroundWhereUniqueInput)
+    @ValidateNested()
+    where!: InstanceType<typeof RgbBackgroundWhereUniqueInput>;
+}
+
+@ArgsType()
+export class RgbBackgroundAggregateArgs {
+    @Field(() => RgbBackgroundWhereInput, {nullable:true})
+    @Type(() => RgbBackgroundWhereInput)
+    @ValidateNested()
+    where?: InstanceType<typeof RgbBackgroundWhereInput>;
+    @Field(() => [RgbBackgroundOrderByWithRelationInput], {nullable:true})
+    orderBy?: Array<RgbBackgroundOrderByWithRelationInput>;
+    @Field(() => RgbBackgroundWhereUniqueInput, {nullable:true})
+    cursor?: InstanceType<typeof RgbBackgroundWhereUniqueInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => RgbBackgroundCountAggregateInput, {nullable:true})
+    _count?: InstanceType<typeof RgbBackgroundCountAggregateInput>;
+    @Field(() => RgbBackgroundAvgAggregateInput, {nullable:true})
+    _avg?: InstanceType<typeof RgbBackgroundAvgAggregateInput>;
+    @Field(() => RgbBackgroundSumAggregateInput, {nullable:true})
+    _sum?: InstanceType<typeof RgbBackgroundSumAggregateInput>;
+    @Field(() => RgbBackgroundMinAggregateInput, {nullable:true})
+    _min?: InstanceType<typeof RgbBackgroundMinAggregateInput>;
+    @Field(() => RgbBackgroundMaxAggregateInput, {nullable:true})
+    _max?: InstanceType<typeof RgbBackgroundMaxAggregateInput>;
+}
+
+@InputType()
+export class RgbBackgroundAvgAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    r?: true;
+    @Field(() => Boolean, {nullable:true})
+    g?: true;
+    @Field(() => Boolean, {nullable:true})
+    b?: true;
+    @Field(() => Boolean, {nullable:true})
+    a?: true;
+}
+
+@ObjectType()
+export class RgbBackgroundAvgAggregate {
+    @Field(() => Float, {nullable:true})
+    r?: number;
+    @Field(() => Float, {nullable:true})
+    g?: number;
+    @Field(() => Float, {nullable:true})
+    b?: number;
+    @HideField()
+    a?: number;
+}
+
+@InputType()
+export class RgbBackgroundAvgOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    r?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    g?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    b?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    a?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class RgbBackgroundCountAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    id?: true;
+    @Field(() => Boolean, {nullable:true})
+    r?: true;
+    @Field(() => Boolean, {nullable:true})
+    g?: true;
+    @Field(() => Boolean, {nullable:true})
+    b?: true;
+    @Field(() => Boolean, {nullable:true})
+    a?: true;
+    @Field(() => Boolean, {nullable:true})
+    _all?: true;
+}
+
+@ObjectType()
+export class RgbBackgroundCountAggregate {
+    @Field(() => Int, {nullable:false})
+    id!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b!: number;
+    @HideField()
+    a!: number;
+    @Field(() => Int, {nullable:false})
+    _all!: number;
+}
+
+@InputType()
+export class RgbBackgroundCountOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    r?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    g?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    b?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    a?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class RgbBackgroundCreateManyInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b!: number;
+    @Field(() => Float, {nullable:true})
+    a?: number;
+}
+
+@InputType()
+export class RgbBackgroundCreateNestedOneWithoutLocationInput {
+    @Field(() => RgbBackgroundCreateWithoutLocationInput, {nullable:true})
+    @Type(() => RgbBackgroundCreateWithoutLocationInput)
+    create?: InstanceType<typeof RgbBackgroundCreateWithoutLocationInput>;
+    @Field(() => RgbBackgroundCreateOrConnectWithoutLocationInput, {nullable:true})
+    @Type(() => RgbBackgroundCreateOrConnectWithoutLocationInput)
+    connectOrCreate?: InstanceType<typeof RgbBackgroundCreateOrConnectWithoutLocationInput>;
+    @Field(() => RgbBackgroundWhereUniqueInput, {nullable:true})
+    @Type(() => RgbBackgroundWhereUniqueInput)
+    connect?: InstanceType<typeof RgbBackgroundWhereUniqueInput>;
+}
+
+@InputType()
+export class RgbBackgroundCreateOrConnectWithoutLocationInput {
+    @Field(() => RgbBackgroundWhereUniqueInput, {nullable:false})
+    @Type(() => RgbBackgroundWhereUniqueInput)
+    where!: InstanceType<typeof RgbBackgroundWhereUniqueInput>;
+    @Field(() => RgbBackgroundCreateWithoutLocationInput, {nullable:false})
+    @Type(() => RgbBackgroundCreateWithoutLocationInput)
+    create!: InstanceType<typeof RgbBackgroundCreateWithoutLocationInput>;
+}
+
+@InputType()
+export class RgbBackgroundCreateWithoutLocationInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b!: number;
+    @Field(() => Float, {nullable:true})
+    a?: number;
+}
+
+@InputType()
+export class RgbBackgroundCreateInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b!: number;
+    @Field(() => Float, {nullable:true})
+    a?: number;
+    @Field(() => LocationCreateNestedOneWithoutRgbBackgroundInput, {nullable:true})
+    Location?: InstanceType<typeof LocationCreateNestedOneWithoutRgbBackgroundInput>;
+}
+
+@ArgsType()
+export class RgbBackgroundGroupByArgs {
+    @Field(() => RgbBackgroundWhereInput, {nullable:true})
+    @Type(() => RgbBackgroundWhereInput)
+    @ValidateNested()
+    where?: InstanceType<typeof RgbBackgroundWhereInput>;
+    @Field(() => [RgbBackgroundOrderByWithAggregationInput], {nullable:true})
+    orderBy?: Array<RgbBackgroundOrderByWithAggregationInput>;
+    @Field(() => [RgbBackgroundScalarFieldEnum], {nullable:false})
+    by!: Array<keyof typeof RgbBackgroundScalarFieldEnum>;
+    @Field(() => RgbBackgroundScalarWhereWithAggregatesInput, {nullable:true})
+    having?: InstanceType<typeof RgbBackgroundScalarWhereWithAggregatesInput>;
+    @Field(() => Int, {nullable:true})
+    take?: number;
+    @Field(() => Int, {nullable:true})
+    skip?: number;
+    @Field(() => RgbBackgroundCountAggregateInput, {nullable:true})
+    _count?: InstanceType<typeof RgbBackgroundCountAggregateInput>;
+    @Field(() => RgbBackgroundAvgAggregateInput, {nullable:true})
+    _avg?: InstanceType<typeof RgbBackgroundAvgAggregateInput>;
+    @Field(() => RgbBackgroundSumAggregateInput, {nullable:true})
+    _sum?: InstanceType<typeof RgbBackgroundSumAggregateInput>;
+    @Field(() => RgbBackgroundMinAggregateInput, {nullable:true})
+    _min?: InstanceType<typeof RgbBackgroundMinAggregateInput>;
+    @Field(() => RgbBackgroundMaxAggregateInput, {nullable:true})
+    _max?: InstanceType<typeof RgbBackgroundMaxAggregateInput>;
+}
+
+@ObjectType()
+export class RgbBackgroundGroupBy {
+    @Field(() => String, {nullable:false})
+    id!: string;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b!: number;
+    @HideField()
+    a?: number;
+    @Field(() => RgbBackgroundCountAggregate, {nullable:true})
+    _count?: InstanceType<typeof RgbBackgroundCountAggregate>;
+    @Field(() => RgbBackgroundAvgAggregate, {nullable:true})
+    _avg?: InstanceType<typeof RgbBackgroundAvgAggregate>;
+    @Field(() => RgbBackgroundSumAggregate, {nullable:true})
+    _sum?: InstanceType<typeof RgbBackgroundSumAggregate>;
+    @Field(() => RgbBackgroundMinAggregate, {nullable:true})
+    _min?: InstanceType<typeof RgbBackgroundMinAggregate>;
+    @Field(() => RgbBackgroundMaxAggregate, {nullable:true})
+    _max?: InstanceType<typeof RgbBackgroundMaxAggregate>;
+}
+
+@InputType()
+export class RgbBackgroundMaxAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    id?: true;
+    @Field(() => Boolean, {nullable:true})
+    r?: true;
+    @Field(() => Boolean, {nullable:true})
+    g?: true;
+    @Field(() => Boolean, {nullable:true})
+    b?: true;
+    @Field(() => Boolean, {nullable:true})
+    a?: true;
+}
+
+@ObjectType()
+export class RgbBackgroundMaxAggregate {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b?: number;
+    @HideField()
+    a?: number;
+}
+
+@InputType()
+export class RgbBackgroundMaxOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    r?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    g?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    b?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    a?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class RgbBackgroundMinAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    id?: true;
+    @Field(() => Boolean, {nullable:true})
+    r?: true;
+    @Field(() => Boolean, {nullable:true})
+    g?: true;
+    @Field(() => Boolean, {nullable:true})
+    b?: true;
+    @Field(() => Boolean, {nullable:true})
+    a?: true;
+}
+
+@ObjectType()
+export class RgbBackgroundMinAggregate {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b?: number;
+    @HideField()
+    a?: number;
+}
+
+@InputType()
+export class RgbBackgroundMinOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    r?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    g?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    b?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    a?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class RgbBackgroundOrderByWithAggregationInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    r?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    g?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    b?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    a?: keyof typeof SortOrder;
+    @Field(() => RgbBackgroundCountOrderByAggregateInput, {nullable:true})
+    _count?: InstanceType<typeof RgbBackgroundCountOrderByAggregateInput>;
+    @Field(() => RgbBackgroundAvgOrderByAggregateInput, {nullable:true})
+    _avg?: InstanceType<typeof RgbBackgroundAvgOrderByAggregateInput>;
+    @Field(() => RgbBackgroundMaxOrderByAggregateInput, {nullable:true})
+    _max?: InstanceType<typeof RgbBackgroundMaxOrderByAggregateInput>;
+    @Field(() => RgbBackgroundMinOrderByAggregateInput, {nullable:true})
+    _min?: InstanceType<typeof RgbBackgroundMinOrderByAggregateInput>;
+    @Field(() => RgbBackgroundSumOrderByAggregateInput, {nullable:true})
+    _sum?: InstanceType<typeof RgbBackgroundSumOrderByAggregateInput>;
+}
+
+@InputType()
+export class RgbBackgroundOrderByWithRelationInput {
+    @Field(() => SortOrder, {nullable:true})
+    id?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    r?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    g?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    b?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    a?: keyof typeof SortOrder;
+    @Field(() => LocationOrderByWithRelationInput, {nullable:true})
+    Location?: InstanceType<typeof LocationOrderByWithRelationInput>;
+}
+
+@InputType()
+export class RgbBackgroundRelationFilter {
+    @Field(() => RgbBackgroundWhereInput, {nullable:true})
+    is?: InstanceType<typeof RgbBackgroundWhereInput>;
+    @Field(() => RgbBackgroundWhereInput, {nullable:true})
+    isNot?: InstanceType<typeof RgbBackgroundWhereInput>;
+}
+
+@InputType()
+export class RgbBackgroundScalarWhereWithAggregatesInput {
+    @Field(() => [RgbBackgroundScalarWhereWithAggregatesInput], {nullable:true})
+    AND?: Array<RgbBackgroundScalarWhereWithAggregatesInput>;
+    @Field(() => [RgbBackgroundScalarWhereWithAggregatesInput], {nullable:true})
+    OR?: Array<RgbBackgroundScalarWhereWithAggregatesInput>;
+    @Field(() => [RgbBackgroundScalarWhereWithAggregatesInput], {nullable:true})
+    NOT?: Array<RgbBackgroundScalarWhereWithAggregatesInput>;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    id?: InstanceType<typeof StringWithAggregatesFilter>;
+    @Field(() => IntWithAggregatesFilter, {nullable:true})
+    r?: InstanceType<typeof IntWithAggregatesFilter>;
+    @Field(() => IntWithAggregatesFilter, {nullable:true})
+    g?: InstanceType<typeof IntWithAggregatesFilter>;
+    @Field(() => IntWithAggregatesFilter, {nullable:true})
+    b?: InstanceType<typeof IntWithAggregatesFilter>;
+    @Field(() => FloatWithAggregatesFilter, {nullable:true})
+    a?: InstanceType<typeof FloatWithAggregatesFilter>;
+}
+
+@InputType()
+export class RgbBackgroundSumAggregateInput {
+    @Field(() => Boolean, {nullable:true})
+    r?: true;
+    @Field(() => Boolean, {nullable:true})
+    g?: true;
+    @Field(() => Boolean, {nullable:true})
+    b?: true;
+    @Field(() => Boolean, {nullable:true})
+    a?: true;
+}
+
+@ObjectType()
+export class RgbBackgroundSumAggregate {
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b?: number;
+    @HideField()
+    a?: number;
+}
+
+@InputType()
+export class RgbBackgroundSumOrderByAggregateInput {
+    @Field(() => SortOrder, {nullable:true})
+    r?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    g?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    b?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    a?: keyof typeof SortOrder;
+}
+
+@InputType()
+export class RgbBackgroundUncheckedCreateWithoutLocationInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b!: number;
+    @Field(() => Float, {nullable:true})
+    a?: number;
+}
+
+@InputType()
+export class RgbBackgroundUncheckedCreateInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g!: number;
+    @Field(() => Int, {nullable:false})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b!: number;
+    @Field(() => Float, {nullable:true})
+    a?: number;
+    @Field(() => LocationUncheckedCreateNestedOneWithoutRgbBackgroundInput, {nullable:true})
+    Location?: InstanceType<typeof LocationUncheckedCreateNestedOneWithoutRgbBackgroundInput>;
+}
+
+@InputType()
+export class RgbBackgroundUncheckedUpdateManyInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b?: number;
+    @Field(() => Float, {nullable:true})
+    a?: number;
+}
+
+@InputType()
+export class RgbBackgroundUncheckedUpdateWithoutLocationInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b?: number;
+    @Field(() => Float, {nullable:true})
+    a?: number;
+}
+
+@InputType()
+export class RgbBackgroundUncheckedUpdateInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b?: number;
+    @Field(() => Float, {nullable:true})
+    a?: number;
+    @Field(() => LocationUncheckedUpdateOneWithoutRgbBackgroundNestedInput, {nullable:true})
+    Location?: InstanceType<typeof LocationUncheckedUpdateOneWithoutRgbBackgroundNestedInput>;
+}
+
+@InputType()
+export class RgbBackgroundUpdateManyMutationInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b?: number;
+    @Field(() => Float, {nullable:true})
+    a?: number;
+}
+
+@InputType()
+export class RgbBackgroundUpdateOneWithoutLocationNestedInput {
+    @Field(() => RgbBackgroundCreateWithoutLocationInput, {nullable:true})
+    @Type(() => RgbBackgroundCreateWithoutLocationInput)
+    create?: InstanceType<typeof RgbBackgroundCreateWithoutLocationInput>;
+    @Field(() => RgbBackgroundCreateOrConnectWithoutLocationInput, {nullable:true})
+    @Type(() => RgbBackgroundCreateOrConnectWithoutLocationInput)
+    connectOrCreate?: InstanceType<typeof RgbBackgroundCreateOrConnectWithoutLocationInput>;
+    @Field(() => RgbBackgroundUpsertWithoutLocationInput, {nullable:true})
+    @Type(() => RgbBackgroundUpsertWithoutLocationInput)
+    upsert?: InstanceType<typeof RgbBackgroundUpsertWithoutLocationInput>;
+    @Field(() => Boolean, {nullable:true})
+    disconnect?: boolean;
+    @Field(() => Boolean, {nullable:true})
+    delete?: boolean;
+    @Field(() => RgbBackgroundWhereUniqueInput, {nullable:true})
+    @Type(() => RgbBackgroundWhereUniqueInput)
+    connect?: InstanceType<typeof RgbBackgroundWhereUniqueInput>;
+    @Field(() => RgbBackgroundUpdateWithoutLocationInput, {nullable:true})
+    @Type(() => RgbBackgroundUpdateWithoutLocationInput)
+    update?: InstanceType<typeof RgbBackgroundUpdateWithoutLocationInput>;
+}
+
+@InputType()
+export class RgbBackgroundUpdateWithoutLocationInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b?: number;
+    @Field(() => Float, {nullable:true})
+    a?: number;
+}
+
+@InputType()
+export class RgbBackgroundUpdateInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    r?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    g?: number;
+    @Field(() => Int, {nullable:true})
+    @Validator.IsInt()
+    @Validator.Min(0)
+    @Validator.Max(255)
+    b?: number;
+    @Field(() => Float, {nullable:true})
+    a?: number;
+    @Field(() => LocationUpdateOneWithoutRgbBackgroundNestedInput, {nullable:true})
+    Location?: InstanceType<typeof LocationUpdateOneWithoutRgbBackgroundNestedInput>;
+}
+
+@InputType()
+export class RgbBackgroundUpsertWithoutLocationInput {
+    @Field(() => RgbBackgroundUpdateWithoutLocationInput, {nullable:false})
+    @Type(() => RgbBackgroundUpdateWithoutLocationInput)
+    update!: InstanceType<typeof RgbBackgroundUpdateWithoutLocationInput>;
+    @Field(() => RgbBackgroundCreateWithoutLocationInput, {nullable:false})
+    @Type(() => RgbBackgroundCreateWithoutLocationInput)
+    create!: InstanceType<typeof RgbBackgroundCreateWithoutLocationInput>;
+}
+
+@InputType()
+export class RgbBackgroundWhereUniqueInput {
+    @Field(() => String, {nullable:true})
+    id?: string;
+}
+
+@InputType()
+export class RgbBackgroundWhereInput {
+    @Field(() => [RgbBackgroundWhereInput], {nullable:true})
+    AND?: Array<RgbBackgroundWhereInput>;
+    @Field(() => [RgbBackgroundWhereInput], {nullable:true})
+    OR?: Array<RgbBackgroundWhereInput>;
+    @Field(() => [RgbBackgroundWhereInput], {nullable:true})
+    NOT?: Array<RgbBackgroundWhereInput>;
+    @Field(() => StringFilter, {nullable:true})
+    id?: InstanceType<typeof StringFilter>;
+    @Field(() => IntFilter, {nullable:true})
+    r?: InstanceType<typeof IntFilter>;
+    @Field(() => IntFilter, {nullable:true})
+    g?: InstanceType<typeof IntFilter>;
+    @Field(() => IntFilter, {nullable:true})
+    b?: InstanceType<typeof IntFilter>;
+    @Field(() => FloatFilter, {nullable:true})
+    a?: InstanceType<typeof FloatFilter>;
+    @Field(() => LocationRelationFilter, {nullable:true})
+    Location?: InstanceType<typeof LocationRelationFilter>;
+}
+
+@ObjectType()
+export class RgbBackground {
+    @Field(() => ID, {nullable:false})
+    id!: string;
+    @Field(() => Int, {nullable:false})
+    r!: number;
+    @Field(() => Int, {nullable:false})
+    g!: number;
+    @Field(() => Int, {nullable:false})
+    b!: number;
+    @HideField()
+    a!: number | null;
+    @HideField()
+    Location?: InstanceType<typeof Location> | null;
+}
+
+@ArgsType()
+export class UpdateManyRgbBackgroundArgs {
+    @Field(() => RgbBackgroundUpdateManyMutationInput, {nullable:false})
+    @Type(() => RgbBackgroundUpdateManyMutationInput)
+    @ValidateNested()
+    data!: InstanceType<typeof RgbBackgroundUpdateManyMutationInput>;
+    @Field(() => RgbBackgroundWhereInput, {nullable:true})
+    @Type(() => RgbBackgroundWhereInput)
+    @ValidateNested()
+    where?: InstanceType<typeof RgbBackgroundWhereInput>;
+}
+
+@ArgsType()
+export class UpdateOneRgbBackgroundArgs {
+    @Field(() => RgbBackgroundUpdateInput, {nullable:false})
+    @Type(() => RgbBackgroundUpdateInput)
+    @ValidateNested()
+    data!: InstanceType<typeof RgbBackgroundUpdateInput>;
+    @Field(() => RgbBackgroundWhereUniqueInput, {nullable:false})
+    @Type(() => RgbBackgroundWhereUniqueInput)
+    @ValidateNested()
+    where!: InstanceType<typeof RgbBackgroundWhereUniqueInput>;
+}
+
+@ArgsType()
+export class UpsertOneRgbBackgroundArgs {
+    @Field(() => RgbBackgroundWhereUniqueInput, {nullable:false})
+    @Type(() => RgbBackgroundWhereUniqueInput)
+    @ValidateNested()
+    where!: InstanceType<typeof RgbBackgroundWhereUniqueInput>;
+    @Field(() => RgbBackgroundCreateInput, {nullable:false})
+    @Type(() => RgbBackgroundCreateInput)
+    create!: InstanceType<typeof RgbBackgroundCreateInput>;
+    @Field(() => RgbBackgroundUpdateInput, {nullable:false})
+    @Type(() => RgbBackgroundUpdateInput)
+    update!: InstanceType<typeof RgbBackgroundUpdateInput>;
 }
 
 @ObjectType()
